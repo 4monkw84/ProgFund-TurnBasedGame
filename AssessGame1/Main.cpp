@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>

@@ -6,29 +6,44 @@ class menu {
 
 public:
 	//Text to be displayed separate from input options
-	void addInput(const std::vector<std::string> inputText) {
-
+	void setInputOptions(const std::vector<std::string> newInput) {
+		inputText = newInput;
 	}
 
-	void addText(const std::vector<std::string> outputText) {
-		//outputText = NULL;
+	//title and/or description text to be printed
+	void setOutputText(const std::vector<std::string> newOutput) {
+		outputText = newOutput;
 	}
 
 	void printMenu() {
-		//TODO: handle text unrelated to menu options (i.e: game rules)
+		system("CLS");
+
+		for (int i = 0; i < outputText.size(); i++) {
+			std::cout << outputText.at(i) << " " << std::endl;
+		}
+		
+		std::cout << "\n";
+
 		for (int i = 0; i < inputText.size(); i++) {
 			std::cout << i + 1 << ": " << inputText.at(i) << '\n';
 		}
-		std::cout << "Input choice: ";
 	}
 
 	int getInput() {
 		int input = 0;
 		bool inMenu = true;
 		do {
+			std::cout << "\nInput choice: ";
 			std::cin >> input;
+
+			if (std::cin.fail()) {
+				std::cerr << "Invalid option, please try again.";
+				std::cin.clear();
+				std::cin.ignore(256, '\n');
+				continue;
+			}
 			if (input > inputText.size()) {
-				std::cout << "Invalid option, please try again.\n";
+				std::cout << "Invalid option, please try again.";
 			}
 			else {
 				inMenu = false;
