@@ -1,31 +1,31 @@
 #pragma once
 
 class menu {
-	std::vector<std::string> inputText = {};
+	std::vector<std::string> inputOptions = {};
 	std::vector<std::string> outputText = {};
 
 public:
 	//Text to be displayed separate from input options
 	void setInputOptions(const std::vector<std::string> newInput) {
-		inputText = newInput;
+		inputOptions = newInput;
 	}
 
 	//title and/or description text to be printed
-	void setOutputText(const std::vector<std::string> newOutput) {
-		outputText = newOutput;
+	void setOutputText(const std::vector<std::string> setOutput) {
+		outputText = setOutput;
 	}
 
 	void printMenu() {
 		system("CLS");
 
 		for (int i = 0; i < outputText.size(); i++) {
-			std::cout << outputText.at(i) << " " << std::endl;
+			std::cout << outputText.at(i);
 		}
 		
 		std::cout << "\n";
 
-		for (int i = 0; i < inputText.size(); i++) {
-			std::cout << i + 1 << ": " << inputText.at(i) << '\n';
+		for (int i = 0; i < inputOptions.size(); i++) {
+			std::cout << i + 1 << ": " << inputOptions.at(i) << '\n';
 		}
 	}
 
@@ -42,7 +42,7 @@ public:
 				std::cin.ignore(256, '\n');
 				continue;
 			}
-			if (input > inputText.size()) {
+			if (input > inputOptions.size()) {
 				std::cout << "Invalid option, please try again.";
 			}
 			else {
