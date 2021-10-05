@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
+#include <conio.h>
 
 #include "character.h"
 #include "gameController.h"

@@ -5,12 +5,9 @@ class game {
 	character player, enemy;
 
 	void mainLoop() {
-
-		std::cout << "main loop running";
-		while (!player.checkIfDead() && !enemy.checkIfDead()) {
+			while (!player.checkIfDead() && !enemy.checkIfDead()) {
 			player.upkeep();
 			playerAction();
-			player.damage(5);
 			enemy.checkIfDead();
 			enemy.upkeep();		
 		}
@@ -29,18 +26,18 @@ class game {
 
 		mainMenu->setOutputText({ "Turn based battle game\n" });
 		mainMenu->setInputOptions({ "Play", "Rules", "Quit" });
-		mainMenu->printMenu();
+		mainMenu->printMenu(0);
 
 		switch (mainMenu->getInput()) {
-		case 1:
+		case 0:
 			mainLoop();
 			break;
 
-		case 2:
+		case 1:
 			rulesMenu();
 			break;
 
-		case 3:
+		case 2:
 			exit(0);
 		}
 	}
@@ -58,10 +55,10 @@ class game {
 			"Dodge: Decreases enemy accuracy by 30%, halves energy regeneration on next turn.\n",
 			"Heal: Convert half of stored energy to health. May perform a second non-heal action this turn.\n"});
 		rulesMenu->setInputOptions({ "Return" });
-		rulesMenu->printMenu();
+		rulesMenu->printMenu(0);
 
 		switch (rulesMenu->getInput()) {
-		case 1:
+		case 0:
 			mainMenu();
 			rulesMenu.release();
 			break;
@@ -80,31 +77,31 @@ class game {
 
 		getPlayerAction->setOutputText({ "Player Health: ", plrHealth, "\nPlayer Energy: ", plrEnergy, "\n\nEnemy Health: ", enmyHealth, "\nEnemy Energy: ", enmyEnergy, "\n" });
 		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Exit to menu" });
-		getPlayerAction->printMenu();
+		getPlayerAction->printMenu(0);
 
 		switch (getPlayerAction->getInput()) {
-		case 1:
+		case 0:
 			player.attack(&enemy);
 			break;
 		
-		case 2:
+		case 1:
 			player.specialAttack(&enemy);
 			break;
 		
-		case 3:
+		case 2:
 			player.rechargeAction();
 			break;
 			
-		case 4:
+		case 3:
 			player.dodgeAction();
 			break;
 
-		case 5:
+		case 4:
 			player.heal();
 			playerAction();
 			break;
 
-		case 6:
+		case 5:
 			mainMenu();
 			break;
 		}
