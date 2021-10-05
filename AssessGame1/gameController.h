@@ -76,7 +76,7 @@ class game {
 		std::string enmyEnergy = std::to_string(enemy.getEnergy());
 
 		getPlayerAction->setOutputText({ "Player Health: ", plrHealth, "\nPlayer Energy: ", plrEnergy, "\n\nEnemy Health: ", enmyHealth, "\nEnemy Energy: ", enmyEnergy, "\n" });
-		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Exit to menu" });
+		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Pause Menu" });
 		getPlayerAction->printMenu(0);
 
 		switch (getPlayerAction->getInput()) {

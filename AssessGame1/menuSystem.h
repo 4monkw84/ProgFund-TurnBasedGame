@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 class menu {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 

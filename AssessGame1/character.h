@@ -115,7 +115,7 @@ public:
 		}
 		else
 			std::cout << "The attack missed!" << std::endl;
-		Sleep(1000);
+		Sleep(1500);
 	}
 
 	void specialAttack(character* target) {
