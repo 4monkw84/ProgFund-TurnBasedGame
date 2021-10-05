@@ -66,23 +66,6 @@ public:
 			case space:
 				return selectedIndex;
 			}
-			/*std::cout << "\nInput choice: ";
-			std::cin >> input;
-
-			if (std::cin.fail()) {
-				std::cerr << "Invalid option, please try again.";
-				std::cin.clear();
-				std::cin.ignore(256, '\n');
-				continue;
-			}
-			if (input > inputOptions.size()) {
-				std::cout << "Invalid option, please try again.";
-			}
-			else {
-				inMenu = false;
-				return input;
-			}
-			*/
 		} while (inMenu);
 	}
 };
