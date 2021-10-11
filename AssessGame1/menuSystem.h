@@ -24,13 +24,16 @@ public:
 		SetConsoleTextAttribute(hConsole, white);
 
 		for (int i = 0; i < outputText.size(); i++) {
-			std::cout << outputText.at(i);
+			std::string message = outputText.at(i);
+			DWORD charsWritten = 0;
+			WriteConsoleA(hConsole, message.c_str(), message.size(), &charsWritten, nullptr);
 		}
 
 		std::cout << "\n";
 
 
 		for (int i = 0; i < inputOptions.size(); i++) {
+			DWORD charsWritten = 0;
 			if (i == targetIndex) {
 				SetConsoleTextAttribute(hConsole, green);
 				std::cout << " [X] ";

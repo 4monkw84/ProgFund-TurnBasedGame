@@ -30,6 +30,16 @@ class character {
 
 public:
 
+	void initCharacter() {
+		health = maxHealth;
+		energy = maxEnergy;
+		energyRegen = defaultRegen;
+		dodge = defaultDodge;
+		isDead = false;
+		hasHealed = false;
+		isRecharging = false;
+	}
+
 	bool checkIfDead() {
 		if (health <= 0)
 			return true;

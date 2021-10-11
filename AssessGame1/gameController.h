@@ -25,20 +25,29 @@ class game {
 		std::auto_ptr<menu> mainMenu(new menu());
 
 		mainMenu->setOutputText({ "Turn based battle game\n" });
-		mainMenu->setInputOptions({ "Play", "Rules", "Quit" });
+		mainMenu->setInputOptions({ "Play", "Rules", "Reset Game", "Quit"});
 		mainMenu->printMenu(0);
 
 		switch (mainMenu->getInput()) {
-		case 0:
-			mainLoop();
-			break;
+			case 0:
+				mainLoop();
+				break;
 
-		case 1:
-			rulesMenu();
-			break;
+			case 1:
+				rulesMenu();
+				break;
 
-		case 2:
-			exit(0);
+			case 2:
+				//TODO: breaks game when used before starting
+				player.initCharacter();
+				enemy.initCharacter();
+				std::cout << "Game reset!" << std::endl;
+				Sleep(1500);
+				playerAction();
+				break;
+
+			case 3:
+				exit(0);
 		}
 	}
 
@@ -63,10 +72,6 @@ class game {
 			rulesMenu.release();
 			break;
 		}
-	}
-
-	static void scoreMenu() {
-
 	}
 
 	void playerAction() {
