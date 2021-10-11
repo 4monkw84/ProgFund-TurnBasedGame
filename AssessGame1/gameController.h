@@ -65,6 +65,10 @@ class game {
 		}
 	}
 
+	static void scoreMenu() {
+
+	}
+
 	void playerAction() {
 		system("CLS");
 		std::auto_ptr<menu> getPlayerAction(new menu());
