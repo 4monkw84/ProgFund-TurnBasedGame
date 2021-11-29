@@ -4,12 +4,12 @@
 class game {
 	character player, enemy;
 
-	void mainLoop() {
-			while (!player.checkIfDead() && !enemy.checkIfDead()) {
+	void coreLoop() {
+		while (!player.checkIfDead() && !enemy.checkIfDead()) {
 			player.upkeep();
 			playerAction();
 			enemy.checkIfDead();
-			enemy.upkeep();		
+			enemy.upkeep();
 		}
 
 		if (player.checkIfDead()) {
@@ -25,29 +25,30 @@ class game {
 		std::auto_ptr<menu> mainMenu(new menu());
 
 		mainMenu->setOutputText({ "Turn based battle game\n" });
-		mainMenu->setInputOptions({ "Play", "Rules", "Reset Game", "Quit"});
+		mainMenu->setInputOptions({ "Play", "Rules", "Reset Game", "Quit" });
 		mainMenu->printMenu(0);
 
+		enum menuCase { beginGame, showRules, resetGame, exitGame };
 		switch (mainMenu->getInput()) {
-			case 0:
-				mainLoop();
-				break;
+		case beginGame:
+			coreLoop();
+			break;
 
-			case 1:
-				rulesMenu();
-				break;
+		case showRules:
+			rulesMenu();
+			break;
 
-			case 2:
-				//TODO: breaks game when used before starting
-				player.initCharacter();
-				enemy.initCharacter();
-				std::cout << "Game reset!" << std::endl;
-				Sleep(1500);
-				playerAction();
-				break;
+		case resetGame:
+			//TODO: breaks game when used before starting
+			player.initCharacter();
+			enemy.initCharacter();
+			std::cout << "Game reset!" << std::endl;
+			Sleep(1500);
+			playerAction();
+			break;
 
-			case 3:
-				exit(0);
+		case exitGame:
+			exit(0);
 		}
 	}
 
@@ -55,19 +56,20 @@ class game {
 		system("CLS");
 		std::auto_ptr<menu> rulesMenu(new menu());
 
-		rulesMenu->setOutputText({ 
-			"The aim of the game is to defeat your opponent before they defeat you!\n", 
-			"You may use the following actions:\n\n", 
-			"Attack: Deal 1-10 points of damage. 80% chance to hit.\n", 
+		rulesMenu->setOutputText({
+			"The aim of the game is to defeat your opponent before they defeat you!\n",
+			"You may use the following actions:\n\n",
+			"Attack: Deal 1-10 points of damage. 80% chance to hit.\n",
 			"Special Attack: Deal 5-20 points of damage. 50% chance to hit. Expends 50 energy\n",
 			"Recharge: Skip attack, quadruple energy regeneration on next turn, enemy gains 10% hit chance.\n",
 			"Dodge: Decreases enemy accuracy by 30%, halves energy regeneration on next turn.\n",
-			"Heal: Convert half of stored energy to health. May perform a second non-heal action this turn.\n"});
+			"Heal: Convert half of stored energy to health. May perform a second non-heal action this turn.\n" });
 		rulesMenu->setInputOptions({ "Return" });
 		rulesMenu->printMenu(0);
 
+		enum menuCase { menu };
 		switch (rulesMenu->getInput()) {
-		case 0:
+		case menu:
 			mainMenu();
 			rulesMenu.release();
 			break;
@@ -88,29 +90,30 @@ class game {
 		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Pause Menu" });
 		getPlayerAction->printMenu(0);
 
+		enum actionCase { attack, spAttack, recharge, dodge, heal, menu };
 		switch (getPlayerAction->getInput()) {
-		case 0:
+		case attack:
 			player.attack(&enemy);
 			break;
-		
-		case 1:
+
+		case spAttack:
 			player.specialAttack(&enemy);
 			break;
-		
-		case 2:
+
+		case recharge:
 			player.rechargeAction();
 			break;
-			
-		case 3:
+
+		case dodge:
 			player.dodgeAction();
 			break;
 
-		case 4:
+		case heal:
 			player.heal();
 			playerAction();
 			break;
 
-		case 5:
+		case menu:
 			mainMenu();
 			break;
 		}
