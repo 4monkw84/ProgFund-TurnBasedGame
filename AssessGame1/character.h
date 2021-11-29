@@ -76,13 +76,13 @@ public:
 					health = maxHealth;
 					std::cout << "You healed for " << healValue << " points of health! " << overhealValue << "HP over-healed." << std::endl;
 				}
-				else{
+				else {
 					health += healValue;
 					std::cout << "You healed for " << healValue << " points of health!" << std::endl;
 				}
 			}
 			else
-				std::cout << "Invalid action, you have healed recently." << std::endl;			
+				std::cout << "Invalid action, you have healed recently." << std::endl;
 		}
 		else
 			std::cout << "Are you sure you want to do that? You're already max HP!" << std::endl;
@@ -99,11 +99,11 @@ public:
 
 	void increaseEnergy() {
 		if (isRecharging) {
-			if (energy += energyRegen > maxEnergy){
+			if (energy += energyRegen > maxEnergy) {
 				energy = maxEnergy;
 				isRecharging = false;
 			}
-			else 
+			else
 				energy += energyRegen;
 		}
 	}

@@ -69,4 +69,8 @@ public:
 			}
 		} while (inMenu);
 	}
+
+	menu() {
+
+	}
 };
