@@ -6,10 +6,15 @@ class game {
 
 	void coreLoop() {
 		while (!player.checkIfDead() && !enemy.checkIfDead()) {
-			player.upkeep();
-			playerAction();
-			enemy.checkIfDead();
-			enemy.upkeep();
+			if (!player.checkIfDead()) {
+				player.upkeep();
+				playerAction();
+			}
+			if (!enemy.checkIfDead()) {
+				enemy.upkeep();
+				enemyAction();
+				Sleep(1500);
+			}
 		}
 
 		if (player.checkIfDead()) {
@@ -86,36 +91,85 @@ class game {
 		std::string enmyHealth = std::to_string(enemy.getHealth());
 		std::string enmyEnergy = std::to_string(enemy.getEnergy());
 
+		//valid action check
+		bool hasUsedValidAction = false;
+
 		getPlayerAction->setOutputText({ "Player Health: ", plrHealth, "\nPlayer Energy: ", plrEnergy, "\n\nEnemy Health: ", enmyHealth, "\nEnemy Energy: ", enmyEnergy, "\n" });
 		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Pause Menu" });
 		getPlayerAction->printMenu(0);
 
-		enum actionCase { attack, spAttack, recharge, dodge, heal, menu };
-		switch (getPlayerAction->getInput()) {
-		case attack:
-			player.attack(&enemy);
-			break;
+		while (!hasUsedValidAction) {
+			enum actionCase { attack, spAttack, recharge, dodge, heal, menu };
+			switch (getPlayerAction->getInput()) {
+			case attack:
+				hasUsedValidAction = player.attack(&enemy);
+				break;
 
-		case spAttack:
-			player.specialAttack(&enemy);
-			break;
+			case spAttack:
+				hasUsedValidAction = player.specialAttack(&enemy);
+				break;
 
-		case recharge:
-			player.rechargeAction();
-			break;
+			case recharge:
+				hasUsedValidAction = player.rechargeAction();
+				break;
 
-		case dodge:
-			player.dodgeAction();
-			break;
+			case dodge:
+				hasUsedValidAction = player.dodgeAction();
+				break;
 
-		case heal:
-			player.heal();
-			playerAction();
-			break;
+			case heal:
+				hasUsedValidAction = player.heal();
+				break;
 
-		case menu:
-			mainMenu();
-			break;
+			case menu:
+				hasUsedValidAction = true;
+				mainMenu();
+				break;
+			}
+		}
+	}
+
+	void enemyAction() {
+		//if the player is or will be at max energy and is not dodging, assume incoming special attack and dodge
+		if ((player.getEnergy() == player.getMaxEnergy() || player.getMaxEnergy() + player.getEnergyRegenValue() >= player.getMaxEnergy()) && (player.getDodgeChance() <= player.getBaseDodgeChance()))
+		{
+			std::cout << "Enemy is dodging!" << std::endl;
+			enemy.dodgeAction();
+		}
+
+		//if the enemy is low on energy, regen
+		else if (enemy.getEnergy() <= 10)
+		{
+			std::cout << "Enemy is regenerating!" << std::endl;
+			enemy.rechargeAction();
+		}
+
+		//if the enemy is under half health and hasn't already healed, heal
+		else if (enemy.getHealth() <= (enemy.getMaxHealth() / 2) && !enemy.getHasHealed())
+		{
+			std::cout << "Enemy has healed!" << std::endl << std::endl;
+			enemy.heal();
+		}
+
+		//if the enemy is at max energy and isn't actively dodging, special attack
+		else if (enemy.getEnergy() == enemy.getMaxEnergy() && player.getDodgeChance() <= player.getBaseDodgeChance())
+		{
+			std::cout << "Enemy is using Special Attack!" << std::endl;
+			enemy.attack(&player);
+		}
+
+		//if the enemy is close to max energy, regen in preperation for special attack
+		else if (enemy.getEnergy() + (enemy.getEnergyRegenValue() * 4) >= enemy.getMaxEnergy())
+		{
+			std::cout << "Enemy is recharing energy!" << std::endl;
+			enemy.rechargeAction();
+		}
+
+		//if there's nothing else better to do, a default attack will suffice
+		else
+		{
+			std::cout << "Enemy is using Attack!" << std::endl;
+			enemy.attack(&player);
 		}
 	}
 

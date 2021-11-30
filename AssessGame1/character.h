@@ -64,7 +64,11 @@ public:
 		return health;
 	}
 
-	void heal() {
+	int getMaxHealth() {
+		return maxHealth;
+	}
+
+	bool heal() {
 		if (getHealth() != maxHealth) {
 			if (!hasHealed) {
 				hasHealed = true;
@@ -74,19 +78,32 @@ public:
 				if (health + healValue > maxHealth) {
 					int overhealValue = health + healValue - maxHealth;
 					health = maxHealth;
-					std::cout << "You healed for " << healValue << " points of health! " << overhealValue << "HP over-healed." << std::endl;
+					std::cout << "\nYou healed for " << healValue << " points of health! " << overhealValue << "HP over-healed." << std::endl;
+					Sleep(1500);
+					return true;
 				}
 				else {
 					health += healValue;
-					std::cout << "You healed for " << healValue << " points of health!" << std::endl;
+					std::cout << "\nYou healed for " << healValue << " points of health!" << std::endl;
+					Sleep(1500);
+					return true;
 				}
 			}
-			else
-				std::cout << "Invalid action, you have healed recently." << std::endl;
+			else {
+				std::cout << "\nInvalid action, you have healed recently." << std::endl;
+				Sleep(1500);
+				return false;
+			}
 		}
-		else
-			std::cout << "Are you sure you want to do that? You're already max HP!" << std::endl;
-		Sleep(1500);
+		else {
+			std::cout << "\nAre you sure you want to do that? You're already max HP!" << std::endl;
+			Sleep(1500);
+			return false;
+		}
+	}
+
+	bool getHasHealed() {
+		return hasHealed;
 	}
 
 	void damage(int damageValue) {
@@ -97,7 +114,15 @@ public:
 		return energy;
 	}
 
-	void increaseEnergy() {
+	int getEnergyRegenValue() {
+		return energyRegen;
+	}
+
+	int getMaxEnergy() {
+		return maxEnergy;
+	}
+
+	bool increaseEnergy() {
 		if (isRecharging) {
 			if (energy += energyRegen > maxEnergy) {
 				energy = maxEnergy;
@@ -106,51 +131,67 @@ public:
 			else
 				energy += energyRegen;
 		}
+		return true;
 	}
 
 	void reduceEnergy(int val) {
 		energy -= val;
 	}
 
-	int getDodgeChance() {
-		return dodge;
-	}
 
-	void attack(character* target) {
+	bool attack(character* target) {
 		int damageValue = (rand() % (attackMaxDamage - attackMinDamage)) + attackMinDamage;
 		int hitRoll = (rand() % attackHitChance);
 		if (hitRoll > target->getDodgeChance()) {
 			target->damage(damageValue);
-			std::cout << "The attack landed and dealt " << damageValue << " points of damage!" << std::endl;
+			std::cout << "\nThe attack landed and dealt " << damageValue << " points of damage!" << std::endl;
 		}
 		else
-			std::cout << "The attack missed!" << std::endl;
+			std::cout << "\nThe attack missed!" << std::endl;
 		Sleep(1500);
+		return true;
 	}
 
-	void specialAttack(character* target) {
+	bool specialAttack(character* target) {
 		if (getEnergy() >= specialAttackCost) {
 			energy -= specialAttackCost;
 			int damageValue = (rand() % (spAttackMinDmg - spAttackMaxDmg)) + spAttackMinDmg;
 			int hitRoll = (rand() % spAttackHitChance);
 			if (hitRoll > target->getDodgeChance()) {
 				target->damage(damageValue);
-				std::cout << "The attack landed and dealt " << damageValue << " points of damage!" << std::endl;
+				std::cout << "\nThe attack landed and dealt " << damageValue << " points of damage!" << std::endl;
+				Sleep(1500);
+				return true;
 			}
-			else
-				std::cout << "The attack missed!" << std::endl;
+			else {
+				std::cout << "\nThe attack missed!" << std::endl;
+				Sleep(1500);
+				return true;
+			}
 		}
-		else
-			std::cout << "Invalid action, not enough energy." << std::endl;
-		Sleep(1500);
+		else {
+			std::cout << "\nInvalid action, not enough energy." << std::endl;
+			Sleep(1500);
+			return false;
+		}
 	}
 
-	void rechargeAction() {
+	bool rechargeAction() {
 		isRecharging = true;
+		return true;
 	}
 
-	void dodgeAction() {
+	bool dodgeAction() {
 		dodge += dodgeActionGain;
 		energyRegen /= 2;
+		return true;
+	}
+
+	int getDodgeChance() {
+		return dodge;
+	}
+
+	int getBaseDodgeChance() {
+		return defaultDodge;
 	}
 };
