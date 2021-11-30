@@ -31,7 +31,6 @@ public:
 
 		std::cout << "\n";
 
-
 		for (int i = 0; i < inputOptions.size(); i++) {
 			DWORD charsWritten = 0;
 			if (i == targetIndex) {
@@ -57,10 +56,18 @@ public:
 					selectedIndex--;
 					this->printMenu(selectedIndex);
 				}
+				else {
+					selectedIndex = inputOptions.size() - 1;
+					this->printMenu(selectedIndex);
+				}
 				break;
 			case down:
 				if (selectedIndex < (inputOptions.size() - 1)) {
 					selectedIndex++;
+					this->printMenu(selectedIndex);
+				}
+				else {
+					selectedIndex = 0;
 					this->printMenu(selectedIndex);
 				}
 				break;

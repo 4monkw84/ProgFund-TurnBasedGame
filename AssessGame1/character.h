@@ -78,13 +78,13 @@ public:
 				if (health + healValue > maxHealth) {
 					int overhealValue = health + healValue - maxHealth;
 					health = maxHealth;
-					std::cout << "\nYou healed for " << healValue << " points of health! " << overhealValue << "HP over-healed." << std::endl;
+					std::cout << "\nHealed for " << healValue << " points of health! " << overhealValue << "HP over-healed." << std::endl;
 					Sleep(1500);
 					return true;
 				}
 				else {
 					health += healValue;
-					std::cout << "\nYou healed for " << healValue << " points of health!" << std::endl;
+					std::cout << "\nHealed for " << healValue << " points of health!" << std::endl;
 					Sleep(1500);
 					return true;
 				}

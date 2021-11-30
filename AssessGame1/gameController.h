@@ -131,7 +131,7 @@ class game {
 
 	void enemyAction() {
 		//if the player is or will be at max energy and is not dodging, assume incoming special attack and dodge
-		if ((player.getEnergy() == player.getMaxEnergy() || player.getMaxEnergy() + player.getEnergyRegenValue() >= player.getMaxEnergy()) && (player.getDodgeChance() <= player.getBaseDodgeChance()))
+		if (((player.getEnergy() == player.getMaxEnergy()) || (player.getMaxEnergy() + player.getEnergyRegenValue() >= player.getMaxEnergy())) && (player.getDodgeChance() <= player.getBaseDodgeChance()))
 		{
 			std::cout << "Enemy is dodging!" << std::endl;
 			enemy.dodgeAction();
