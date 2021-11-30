@@ -6,6 +6,9 @@ class game {
 
 	//used to handle resetting the game
 	bool gameStarted = false;
+	//used to track wins/losses
+	int wins = 0;
+	int losses = 0;
 
 	void coreLoop() {
 		gameStarted = true;
@@ -24,9 +27,15 @@ class game {
 
 		if (player.checkIfDead()) {
 			std::cout << "You lose." << std::endl;
+			losses++;
+			Sleep(1500);
+			mainMenu();
 		}
 		else {
 			std::cout << "You win!" << std::endl;
+			wins++;
+			Sleep(1500);
+			mainMenu();
 		}
 	}
 
@@ -34,7 +43,11 @@ class game {
 		system("CLS");
 		std::auto_ptr<menu> mainMenuObj(new menu());
 
-		mainMenuObj->setOutputText({ "Turn based battle game\n" });
+		//conversion of win/loss count for displaying
+		std::string winCount = std::to_string(wins);
+		std::string lossCount = std::to_string(losses);
+
+		mainMenuObj->setOutputText({ "Turn based battle game\n", "Wins: ", winCount, "\nLosses: ", lossCount, "\n" });
 		mainMenuObj->setInputOptions({ "Play", "Rules", "Reset Game", "Quit" });
 		mainMenuObj->printMenu(0);
 
