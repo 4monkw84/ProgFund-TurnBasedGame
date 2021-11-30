@@ -4,7 +4,12 @@
 class game {
 	character player, enemy;
 
+	//used to handle resetting the game
+	bool gameStarted = false;
+
 	void coreLoop() {
+		gameStarted = true;
+
 		while (!player.checkIfDead() && !enemy.checkIfDead()) {
 			if (!player.checkIfDead()) {
 				player.upkeep();
@@ -27,15 +32,15 @@ class game {
 
 	void mainMenu() {
 		system("CLS");
-		std::auto_ptr<menu> mainMenu(new menu());
+		std::auto_ptr<menu> mainMenuObj(new menu());
 
-		mainMenu->setOutputText({ "Turn based battle game\n" });
-		mainMenu->setInputOptions({ "Play", "Rules", "Reset Game", "Quit" });
-		mainMenu->printMenu(0);
+		mainMenuObj->setOutputText({ "Turn based battle game\n" });
+		mainMenuObj->setInputOptions({ "Play", "Rules", "Reset Game", "Quit" });
+		mainMenuObj->printMenu(0);
 
-		enum menuCase { beginGame, showRules, resetGame, exitGame };
-		switch (mainMenu->getInput()) {
-		case beginGame:
+		enum menuCase { playGame, showRules, resetGame, exitGame };
+		switch (mainMenuObj->getInput()) {
+		case playGame:
 			coreLoop();
 			break;
 
@@ -45,12 +50,19 @@ class game {
 
 		case resetGame:
 			//TODO: breaks game when used before starting
-			player.initCharacter();
-			enemy.initCharacter();
-			std::cout << "Game reset!" << std::endl;
-			Sleep(1500);
-			playerAction();
-			break;
+			if (gameStarted) {
+				gameStarted = false;
+				player.initCharacter();
+				enemy.initCharacter();
+				std::cout << "\nGame reset!" << std::endl;
+				Sleep(1500);
+				mainMenu();
+			}
+			else {
+				std::cout << "\nGame hasn't begun, there's nothing to reset!" << std::endl;
+				Sleep(1500);
+				mainMenu();
+			}
 
 		case exitGame:
 			exit(0);
@@ -76,7 +88,6 @@ class game {
 		switch (rulesMenu->getInput()) {
 		case menu:
 			mainMenu();
-			rulesMenu.release();
 			break;
 		}
 	}
@@ -133,42 +144,42 @@ class game {
 		//if the player is or will be at max energy and is not dodging, assume incoming special attack and dodge
 		if (((player.getEnergy() == player.getMaxEnergy()) || (player.getEnergy() + player.getEnergyRegenValue() >= player.getMaxEnergy())) && (player.getDodgeChance() <= player.getBaseDodgeChance()))
 		{
-			std::cout << "Enemy is dodging!" << std::endl;
+			std::cout << "\nEnemy is dodging!" << std::endl;
 			enemy.dodgeAction();
 		}
 
 		//if the enemy is low on energy, regen
 		else if (enemy.getEnergy() <= 10)
 		{
-			std::cout << "Enemy is regenerating!" << std::endl;
+			std::cout << "\nEnemy is regenerating!" << std::endl;
 			enemy.rechargeAction();
 		}
 
 		//if the enemy is under half health and hasn't already healed, heal
 		else if (enemy.getHealth() <= (enemy.getMaxHealth() / 2) && !enemy.getHasHealed())
 		{
-			std::cout << "Enemy has healed!" << std::endl << std::endl;
+			std::cout << "\nEnemy has healed!" << std::endl << std::endl;
 			enemy.heal();
 		}
 
 		//if the enemy is at max energy and isn't actively dodging, special attack
 		else if (enemy.getEnergy() == enemy.getMaxEnergy() && player.getDodgeChance() <= player.getBaseDodgeChance())
 		{
-			std::cout << "Enemy is using Special Attack!" << std::endl;
+			std::cout << "\nEnemy is using Special Attack!" << std::endl;
 			enemy.attack(&player);
 		}
 
 		//if the enemy is close to max energy, regen in preperation for special attack
 		else if (enemy.getEnergy() + (enemy.getEnergyRegenValue() * 4) >= enemy.getMaxEnergy())
 		{
-			std::cout << "Enemy is recharing energy!" << std::endl;
+			std::cout << "\nEnemy is recharing energy!" << std::endl;
 			enemy.rechargeAction();
 		}
 
 		//if there's nothing else better to do, a default attack will suffice
 		else
 		{
-			std::cout << "Enemy is using Attack!" << std::endl;
+			std::cout << "\nEnemy is using Attack!" << std::endl;
 			enemy.attack(&player);
 		}
 	}
