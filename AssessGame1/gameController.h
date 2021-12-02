@@ -37,22 +37,22 @@ class game {
 			Sleep(1500);
 			mainMenu();
 		}
+
+		//reset game after it finishes
+		player.initCharacter();
+		enemy.initCharacter();
 	}
 
 	void mainMenu() {
 		system("CLS");
-		std::auto_ptr<menu> mainMenuObj(new menu());
+		menu mainMenuObj;
 
-		//conversion of win/loss count for displaying
-		std::string winCount = std::to_string(wins);
-		std::string lossCount = std::to_string(losses);
+		mainMenuObj.setOutputText({ "Turn based battle game\n" });
+		mainMenuObj.setInputOptions({ "Play", "Rules", "Score", "Reset Game", "Quit" });
+		mainMenuObj.printMenu(0);
 
-		mainMenuObj->setOutputText({ "Turn based battle game\n", "Wins: ", winCount, "\nLosses: ", lossCount, "\n" });
-		mainMenuObj->setInputOptions({ "Play", "Rules", "Reset Game", "Quit" });
-		mainMenuObj->printMenu(0);
-
-		enum menuCase { playGame, showRules, resetGame, exitGame };
-		switch (mainMenuObj->getInput()) {
+		enum menuCase { playGame, showRules, score, resetGame, exitGame };
+		switch (mainMenuObj.getInput()) {
 		case playGame:
 			coreLoop();
 			break;
@@ -61,8 +61,11 @@ class game {
 			rulesMenu();
 			break;
 
+		case score:
+			scoreMenu();
+			break;
+
 		case resetGame:
-			//TODO: breaks game when used before starting
 			if (gameStarted) {
 				gameStarted = false;
 				player.initCharacter();
@@ -84,9 +87,9 @@ class game {
 
 	void rulesMenu() {
 		system("CLS");
-		std::auto_ptr<menu> rulesMenu(new menu());
+		menu rulesMenu;
 
-		rulesMenu->setOutputText({
+		rulesMenu.setOutputText({
 			"The aim of the game is to defeat your opponent before they defeat you!\n",
 			"You may use the following actions:\n\n",
 			"Attack: Deal 1-10 points of damage. 80% chance to hit.\n",
@@ -94,11 +97,31 @@ class game {
 			"Recharge: Skip attack, quadruple energy regeneration on next turn, enemy gains 10% hit chance.\n",
 			"Dodge: Decreases enemy accuracy by 30%, halves energy regeneration on next turn.\n",
 			"Heal: Convert half of stored energy to health. May perform a second non-heal action this turn.\n" });
-		rulesMenu->setInputOptions({ "Return" });
-		rulesMenu->printMenu(0);
+		rulesMenu.setInputOptions({ "Return" });
+		rulesMenu.printMenu(0);
 
 		enum menuCase { menu };
-		switch (rulesMenu->getInput()) {
+		switch (rulesMenu.getInput()) {
+		case menu:
+			mainMenu();
+			break;
+		}
+	}
+
+	void scoreMenu() {
+		system("CLS");
+		menu scoreMenu;
+
+		//conversion of win/loss count for displaying
+		std::string winCount = std::to_string(wins);
+		std::string lossCount = std::to_string(losses);
+
+		scoreMenu.setOutputText({ "Score Menu\n", "Wins: ", winCount, "\n", "Losses: ", lossCount, "\n" });
+		scoreMenu.setInputOptions({ "Return" });
+		scoreMenu.printMenu(0);
+
+		enum menuCase { menu };
+		switch (scoreMenu.getInput()) {
 		case menu:
 			mainMenu();
 			break;
@@ -107,7 +130,7 @@ class game {
 
 	void playerAction() {
 		system("CLS");
-		std::auto_ptr<menu> getPlayerAction(new menu());
+		menu getPlayerAction;
 
 		//converting attributes to string format to display
 		std::string plrHealth = std::to_string(player.getHealth());
@@ -118,13 +141,13 @@ class game {
 		//valid action check
 		bool hasUsedValidAction = false;
 
-		getPlayerAction->setOutputText({ "Player Health: ", plrHealth, "\nPlayer Energy: ", plrEnergy, "\n\nEnemy Health: ", enmyHealth, "\nEnemy Energy: ", enmyEnergy, "\n" });
-		getPlayerAction->setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Pause Menu" });
-		getPlayerAction->printMenu(0);
+		getPlayerAction.setOutputText({ "Player Health: ", plrHealth, "\n Player Energy: ", plrEnergy, "\n\n Enemy Health: ", enmyHealth, "\n Enemy Energy: ", enmyEnergy, "\n" });
+		getPlayerAction.setInputOptions({ "Attack", "Special Attack", "Recharge", "Dodge", "Heal", "Pause Menu" });
+		getPlayerAction.printMenu(0);
 
 		while (!hasUsedValidAction) {
 			enum actionCase { attack, spAttack, recharge, dodge, heal, menu };
-			switch (getPlayerAction->getInput()) {
+			switch (getPlayerAction.getInput()) {
 			case attack:
 				hasUsedValidAction = player.attack(&enemy);
 				break;

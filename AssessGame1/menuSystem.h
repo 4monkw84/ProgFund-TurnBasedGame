@@ -25,8 +25,7 @@ public:
 
 		for (int i = 0; i < outputText.size(); i++) {
 			std::string message = outputText.at(i);
-			DWORD charsWritten = 0;
-			WriteConsoleA(hConsole, message.c_str(), message.size(), &charsWritten, nullptr);
+			std::cout << " " << message;
 		}
 
 		std::cout << "\n";
